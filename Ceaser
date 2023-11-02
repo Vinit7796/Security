@@ -1,0 +1,12 @@
+!pip  install secretpy
+from secretpy import Caesar
+plaintext = "sahil"
+print(plaintext)
+key = -1
+cipher = Caesar()
+
+encr = cipher.encrypt(plaintext, key)
+print(encr)
+
+decr=cipher.decrypt(encr, key)
+print(decr)
