@@ -1,0 +1,42 @@
+#1 Deffie Hamilton
+
+
+# Function to compute `a^m mod n`
+def compute(a, m, n):
+    r = 0
+    y = 1
+    while m > 0:
+        r = m % 2
+        # fast exponentiation
+        if r == 1:
+            y = (y * a) % n
+        a = (a * a) % n
+        m = m // 2
+    return y
+
+# Main program
+p = 23  # modulus
+g = 5   # base
+a, b = 0, 0  # `a` – Alice's secret key, `b` – Bob's secret key
+A, B = 0, 0  # `A` – Alice's public key, `B` – Bob's public key
+
+# Choose a secret integer for Alice's private key (only known to Alice)
+a = 6  # or use a random number generator for better security
+
+# Calculate Alice's public key (Alice will send `A` to Bob)
+A = compute(g, a, p)
+
+# Choose a secret integer for Bob's private key (only known to Bob)
+b = 15  # or use a random number generator for better security
+
+# Calculate Bob's public key (Bob will send `B` to Alice)
+B = compute(g, b, p)
+
+# Alice and Bob Exchange their public keys `A` and `B` with each other
+
+# Find the shared secret key
+keyA = compute(B, a, p)
+keyB = compute(A, b, p)
+
+print(f"Alice's secret key is {keyA}")
+print(f"Bob's secret key is {keyB}")
