@@ -1,0 +1,49 @@
+import math
+
+# Function to find gcd
+def gcd(a, h):
+    while True:
+        temp = a % h
+        if temp == 0:
+            return h
+        a, h = h, temp
+
+# 2 random prime numbers
+p = 3
+q = 7
+n = p * q
+count = 0
+totient = (p - 1) * (q - 1)
+
+# Public key (e stands for encrypt)
+e = 2
+# Find a co-prime that satisfies e > 1
+while e < totient:
+    count = gcd(e, totient)
+    if count == 1:
+        break
+    else:
+        e += 1
+
+# Private key (d stands for decrypt)
+d = None
+k = 2  # k can be any arbitrary value
+# Choose d such that it satisfies d * e = 1 + k * totient
+d = (1 + (k * totient)) / e
+
+msg = 12
+c = pow(msg, e)
+m = pow(c, d)
+c = c % n
+m = m % n
+
+print("Message data =", msg)
+print("p =", p)
+print("q =", q)
+print("n = pq =", n)
+print("totient =", totient)
+print("e =", e)
+print("d =", d)
+print("Encrypted data =", c)
+print("Original Message Sent =", m)
+
