@@ -1,0 +1,80 @@
+#PLAYFAIR CIPHER
+
+SIZE = 30
+def toLowerCase(plain):
+    return plain.lower()
+def removeSpaces(plain):
+    return plain.replace(" ", "")
+def generateKeyTable(key):
+    keyT = [["" for _ in range(5)] for _ in range(5)]
+    dicty = [0] * 26
+    for char in key:
+        if char != "j":
+            dicty[ord(char) - ord("a")] = 2
+    dicty[ord("j") - ord("a")] = 1
+    i, j = 0, 0
+    for char in key:
+        if dicty[ord(char) - ord("a")] == 2:
+            dicty[ord(char) - ord("a")] -= 1
+            keyT[i][j] = char
+            j += 1
+            if j == 5:
+                i += 1
+                j = 0
+    for k in range(26):
+        if dicty[k] == 0:
+            keyT[i][j] = chr(k + ord("a"))
+            j += 1
+            if j == 5:
+                i += 1
+                j = 0
+    return keyT
+def search(keyT, a, b):
+    arr = [0, 0, 0, 0]
+    for i in range(5):
+        for j in range(5):
+            if keyT[i][j] == a:
+                arr[0] = i
+                arr[1] = j
+            elif keyT[i][j] == b:
+                arr[2] = i
+                arr[3] = j
+    return arr
+def mod5(a):
+    return a % 5
+def prepare(str):
+    if len(str) % 2 != 0:
+        str += "z"
+    return str
+def encrypt(str, keyT):
+    i = 0
+    str_list = list(str)
+    while i < len(str_list):
+        a = search(keyT, str_list[i], str_list[i + 1])
+        if a[0] == a[2]:
+            str_list[i] = keyT[a[0]][mod5(a[1] + 1)]
+            str_list[i + 1] = keyT[a[0]][mod5(a[3] + 1)]
+        elif a[1] == a[3]:
+            str_list[i] = keyT[mod5(a[0] + 1)][a[1]]
+            str_list[i + 1] = keyT[mod5(a[2] + 1)][a[1]]
+        else:
+            str_list[i] = keyT[a[0]][a[3]]
+            str_list[i + 1] = keyT[a[2]][a[1]]
+        i += 2
+    return "".join(str_list)
+def encryptByPlayfairCipher(str, key):
+    key = key.lower()
+    key = removeSpaces(key)
+    keyT = generateKeyTable(key)
+    str = str.lower()
+    str = removeSpaces(str)
+    str = prepare(str)
+    str = encrypt(str, keyT)
+    return str
+if __name__ == "__main__":
+    key = "Algorithm"
+    print("Key text:", key)
+    str = "Programming"
+    print("Plain text:", str)
+    encrypted_str = encryptByPlayfairCipher(str, key)
+    print("Cipher text:", encrypted_str)
